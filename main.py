@@ -39,8 +39,8 @@ args = parser.parse_args()
 args.label_num = 8
 args.cuda = torch.cuda.is_available() and not args.no_cuda
 args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
-tmp0 = torch.load('data/train.pt.0')
-tmp1 = torch.load('data/test.pt.0')
+tmp0 = torch.load('data/train.pt')
+tmp1 = torch.load('data/test.pt')
 
 args.model = 'mlp'
 
