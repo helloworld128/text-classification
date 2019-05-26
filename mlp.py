@@ -11,12 +11,12 @@ class MLP(nn.Module):
 
         C = args.label_num
         embeddingDim = args.embed_dim
-        sz = [400 * embeddingDim, 4096, 512, 64, C]
+        sz = [400 * embeddingDim, 3000, C]
 
         self.fc = nn.ModuleList([nn.Linear(sz[i], sz[i + 1]) for i in range(len(sz) - 1)])
-        for fc in self.fc:
-            nn.init.xavier_normal_(fc.weight)
-            nn.init.constant(fc.bias, 0.1)
+        # for fc in self.fc:
+        #     nn.init.xavier_normal_(fc.weight)
+        #     nn.init.constant(fc.bias, 0)
         self.dropout = nn.Dropout(args.dropout)
 
     def forward(self, x):

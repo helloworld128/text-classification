@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import torch.nn.functional as F
 
 
 class RNN(nn.Module):
@@ -35,4 +36,4 @@ class RNN(nn.Module):
         # hidden = [batch size, hidden dim * num directions]
         hidden = self.dropout(torch.cat([hidden[i, :, :] for i in range(hidden.shape[0])], dim=1))
 
-        return self.fc(hidden)
+        return F.softmax(self.fc(hidden), dim=1)

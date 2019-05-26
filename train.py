@@ -4,7 +4,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import torch.nn as nn
-from parse_data import only_one_label
+from my_parse_data import only_one_label
 
 criterion = nn.MSELoss()
 
@@ -26,9 +26,10 @@ def train(train_data, test_data, model, args):
                 feature, target = feature.cuda(), target.cuda()
             optimizer.zero_grad()
             logit = model(feature)
-
-            loss = criterion(logit, target)
-            # loss = F.cross_entropy(logit, target)
+            if only_one_label:
+                loss = F.cross_entropy(logit, target)
+            else:
+                loss = criterion(logit, target)
             loss.backward()
             optimizer.step()
 

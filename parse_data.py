@@ -5,10 +5,10 @@ from parse_embedding import *
 import numpy as np
 
 
-only_one_label = False
+only_one_label = True
 data_row = 400
 train_num = 2342  # 2342
-test_num = 600  # 2228
+test_num = 2228  # 2228
 vectors, words, word2idx, _ = load()
 embed = nn.Embedding(vocab_size, embedding_dim)
 embed.weight = nn.Parameter(torch.FloatTensor(vectors))

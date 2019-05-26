@@ -36,8 +36,8 @@ class TextCNN(nn.Module):
 
         x = self.dropout(x)  # (N, len(Ks)*Co)
         x = self.fc1(x)  # (N, C)
-        logit = F.softmax(x, dim=1)
-        return logit
+        x = F.softmax(x, dim=1)
+        return x
 
 
 
