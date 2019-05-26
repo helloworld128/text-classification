@@ -35,8 +35,8 @@ class TextCNN(nn.Module):
         x = torch.cat(x, 1)
 
         x = self.dropout(x)  # (N, len(Ks)*Co)
-        logit = self.fc1(x)  # (N, C)
-        # logit = F.softmax(x)
+        x = self.fc1(x)  # (N, C)
+        logit = F.softmax(x)
         return logit
 
 
