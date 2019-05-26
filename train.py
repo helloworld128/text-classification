@@ -1,7 +1,6 @@
 import os
 import sys
 import torch
-import torch.autograd as autograd
 import torch.nn.functional as F
 import numpy as np
 import torch.nn as nn
@@ -13,6 +12,7 @@ def train(train_data, test_data, model, args):
         model.cuda()
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-8)
+    criterion = nn.MSELoss()
 
     steps = 0
     best_acc = 0
@@ -26,7 +26,7 @@ def train(train_data, test_data, model, args):
             optimizer.zero_grad()
             logit = model(feature)
 
-            loss = nn.MSELoss()
+            loss = criterion(logit, target)
             # loss = F.cross_entropy(logit, target)
             loss.backward()
             optimizer.step()

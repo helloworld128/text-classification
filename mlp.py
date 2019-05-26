@@ -14,7 +14,10 @@ class MLP(nn.Module):
         sz = [400 * embeddingDim, 4096, 512, 64, C]
 
         self.fc = nn.ModuleList([nn.Linear(sz[i], sz[i + 1]) for i in range(len(sz) - 1)])
-        # self.dropout = nn.Dropout(args.dropout)
+        for fc in self.fc:
+            nn.init.xavier_normal_(fc.weight)
+            nn.init.constant(fc.bias, 0.1)
+        self.dropout = nn.Dropout(args.dropout)
 
     def forward(self, x):
         if self.args.static:
@@ -22,6 +25,7 @@ class MLP(nn.Module):
         x = torch.reshape(x, (x.shape[0], x.shape[1] * x.shape[2]))
         for fc in self.fc:
             x = fc(x)
+            x = self.dropout(x)
         logit = F.softmax(x)
         return logit
 
