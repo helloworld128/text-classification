@@ -26,7 +26,7 @@ class MLP(nn.Module):
         for fc in self.fc:
             x = fc(x)
             x = self.dropout(x)
-        logit = F.softmax(x)
+        logit = F.softmax(x, dim=1)
         return logit
 
 

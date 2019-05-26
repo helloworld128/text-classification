@@ -6,13 +6,14 @@ import numpy as np
 import torch.nn as nn
 from parse_data import only_one_label
 
+criterion = nn.MSELoss()
+
 
 def train(train_data, test_data, model, args):
     if args.cuda:
         model.cuda()
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-8)
-    criterion = nn.MSELoss()
 
     steps = 0
     best_acc = 0
@@ -66,7 +67,10 @@ def eval(data_iter, model, args):
         if args.cuda:
             feature, target = feature.cuda(), target.cuda()
         logit = model(feature)
-        loss = F.cross_entropy(logit, target, size_average=False)
+        if only_one_label:
+            loss = F.cross_entropy(logit, target, size_average=False)
+        else:
+            loss = criterion(logit, target)
         avg_loss += loss.item()
         if only_one_label:
             corrects += np.sum((target - torch.max(logit, 1)[1]).cpu().numpy() == 0)
