@@ -16,7 +16,6 @@ def train(train_data, test_data, model, args):
     best_acc = 0
     last_step = 0
     for epoch in range(1, args.epochs+1):
-        print('\nEpoch %d' % epoch)
         for batch in train_data:
             model.train()
             feature, target = batch
