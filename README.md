@@ -1,1 +1,1 @@
-# text-classification
+# chinese sentiment analysis
