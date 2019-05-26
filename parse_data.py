@@ -5,10 +5,10 @@ from parse_embedding import *
 import numpy as np
 
 
-only_one_label = True
+only_one_label = False
 data_row = 400
 train_num = 2342  # 2342
-test_num = 2228  # 2228
+test_num = 600  # 2228
 vectors, words, word2idx, _ = load()
 embed = nn.Embedding(vocab_size, embedding_dim)
 embed.weight = nn.Parameter(torch.FloatTensor(vectors))
@@ -17,7 +17,10 @@ embed.weight = nn.Parameter(torch.FloatTensor(vectors))
 class MyDataset(Dataset):
     def __init__(self, fileName, num):
         data_tensor = np.zeros((num, data_row, 300), dtype=np.float32)
-        target_tensor = np.zeros((num, ), dtype=np.int64)
+        if not only_one_label:
+            target_tensor = np.zeros((num, 8), dtype=np.float32)
+        else:
+            target_tensor = np.zeros((num, ), dtype=np.int64)
         fp = open(fileName, encoding='utf-8')
         for idx, l in enumerate(fp):
             if idx == num:
@@ -54,8 +57,8 @@ class MyDataset(Dataset):
 
 if __name__ == '__main__':
     train = MyDataset('sina/sinanews.train', train_num)
-    torch.save(train, 'data/train.pt')
+    torch.save(train, 'data/train.pt.1')
     test = MyDataset('sina/sinanews.test', test_num)
-    torch.save(test, 'data/test.pt')
+    torch.save(test, 'data/test.pt.1')
 
 

@@ -4,6 +4,8 @@ import torch
 import torch.autograd as autograd
 import torch.nn.functional as F
 import numpy as np
+import torch.nn as nn
+from parse_data import only_one_label
 
 
 def train(train_data, test_data, model, args):
@@ -24,13 +26,17 @@ def train(train_data, test_data, model, args):
             optimizer.zero_grad()
             logit = model(feature)
 
-            loss = F.cross_entropy(logit, target)
+            loss = nn.MSELoss()
+            # loss = F.cross_entropy(logit, target)
             loss.backward()
             optimizer.step()
 
             steps += 1
             if steps % args.log_interval == 0:
-                corrects = np.sum((target - torch.max(logit, 1)[1]).cpu().numpy() == 0)
+                if only_one_label:
+                    corrects = np.sum((target - torch.max(logit, 1)[1]).cpu().numpy() == 0)
+                else:
+                    corrects = np.sum((torch.max(target, 1)[1] - torch.max(logit, 1)[1]).cpu().numpy() == 0)
                 accuracy = 100.0 * corrects/target.shape[0]
                 sys.stdout.write(
                     '\rBatch[{}] - loss: {:.6f}  acc: {:.4f}%({}/{})'.format(steps,
@@ -62,7 +68,10 @@ def eval(data_iter, model, args):
         logit = model(feature)
         loss = F.cross_entropy(logit, target, size_average=False)
         avg_loss += loss.item()
-        corrects += np.sum((target - torch.max(logit, 1)[1]).cpu().numpy() == 0)
+        if only_one_label:
+            corrects += np.sum((target - torch.max(logit, 1)[1]).cpu().numpy() == 0)
+        else:
+            corrects += np.sum((torch.max(target, 1)[1] - torch.max(logit, 1)[1]).cpu().numpy() == 0)
         size += target.shape[0]
         # 400 tests are enough
         if size > 400:
