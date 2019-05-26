@@ -15,11 +15,10 @@ class TextCNN(nn.Module):
         kernelSizes = args.kernel_sizes
         embeddingDim = args.embed_dim
 
-
         self.convs1 = nn.ModuleList([nn.Conv2d(channelIn, kernelNum, (kernelSize, embeddingDim)) for kernelSize in kernelSizes])
         for conv in self.convs1:
-            nn.init.xavier_normal(conv.weight)
-            nn.init.constant(conv.bias, 0.1)
+            nn.init.xavier_normal_(conv.weight)
+            nn.init.constant_(conv.bias, 0.1)
         self.dropout = nn.Dropout(args.dropout)
         self.fc1 = nn.Linear(len(kernelSizes) * kernelNum, C)
 

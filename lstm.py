@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import numpy as np
 
 
 class RNN(nn.Module):
@@ -12,7 +13,15 @@ class RNN(nn.Module):
                             num_layers=n_layers,
                             bidirectional=bidirectional,
                             dropout=dropout, batch_first=True)
+        nn.init.xavier_normal_(self.lstm.all_weights[0][0])
+        nn.init.xavier_normal_(self.lstm.all_weights[0][1])
+        nn.init.xavier_normal_(self.lstm.all_weights[1][0])
+        nn.init.xavier_normal_(self.lstm.all_weights[1][1])
         self.gru = nn.GRU(embedding_dim, hidden_dim, n_layers, batch_first=True, dropout=dropout, bidirectional=True)
+        nn.init.xavier_normal_(self.gru.all_weights[0][0])
+        nn.init.xavier_normal_(self.gru.all_weights[0][1])
+        nn.init.xavier_normal_(self.gru.all_weights[1][0])
+        nn.init.xavier_normal_(self.gru.all_weights[1][1])
         self.fc = nn.Linear(hidden_dim * n_layers * (2 if bidirectional else 1), output_dim)
         self.dropout = nn.Dropout(dropout)
 

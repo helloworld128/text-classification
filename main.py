@@ -55,7 +55,7 @@ if args.model == 'cnn':
         print('\n' + '-' * 89)
         print('Exiting from training early')
 elif args.model == 'rnn':
-    rnnModel = lstm.RNN('LSTM', 300, 64, 8, 2, True, 0.3)
+    rnnModel = lstm.RNN('LSTM', 300, 150, 8, 2, True, 0.3)
     train_data = DataLoader(tmp0, batch_size=args.batch_size, shuffle=True, num_workers=config.num_workers)
     test_data = DataLoader(tmp1, batch_size=args.batch_size, shuffle=True, num_workers=config.num_workers)
     try:
