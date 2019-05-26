@@ -40,8 +40,8 @@ args = parser.parse_args()
 args.label_num = 8
 args.cuda = torch.cuda.is_available() and not config.no_cuda
 args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
-tmp0 = torch.load('data/train.pt')
-tmp1 = torch.load('data/test.pt')
+tmp0 = torch.load('data/train.pt' + config.suffix)
+tmp1 = torch.load('data/test.pt' + config.suffix)
 
 args.model = 'rnn'
 
