@@ -15,10 +15,10 @@ def train(train_data, test_data, model, args):
     steps = 0
     best_acc = 0
     last_step = 0
-    model.train()
     for epoch in range(1, args.epochs+1):
         print('\nEpoch %d' % epoch)
         for batch in train_data:
+            model.train()
             feature, target = batch
             if args.cuda:
                 feature, target = feature.cuda(), target.cuda()
@@ -31,7 +31,7 @@ def train(train_data, test_data, model, args):
 
             steps += 1
             if steps % args.log_interval == 0:
-                corrects = np.sum((target - torch.max(logit, 1)[1]).numpy() == 0)
+                corrects = np.sum((target - torch.max(logit, 1)[1]).cpu().numpy() == 0)
                 accuracy = 100.0 * corrects/target.shape[0]
                 sys.stdout.write(
                     '\rBatch[{}] - loss: {:.6f}  acc: {:.4f}%({}/{})'.format(steps,
@@ -59,11 +59,11 @@ def eval(data_iter, model, args):
     for batch in data_iter:
         feature, target = batch
         if args.cuda:
-            feature, target = feature.cuda, target.cuda
+            feature, target = feature.cuda(), target.cuda()
         logit = model(feature)
         loss = F.cross_entropy(logit, target, size_average=False)
         avg_loss += loss.item()
-        corrects += np.sum((target - torch.max(logit, 1)[1]).numpy() == 0)
+        corrects += np.sum((target - torch.max(logit, 1)[1]).cpu().numpy() == 0)
         size += target.shape[0]
         # 400 tests are enough
         if size > 400:

@@ -43,7 +43,7 @@ args.kernel_sizes = [int(k) for k in args.kernel_sizes.split(',')]
 tmp0 = torch.load('data/train.pt')
 tmp1 = torch.load('data/test.pt')
 
-args.model = 'mlp'
+args.model = 'rnn'
 
 if args.model == 'cnn':
     train_data = DataLoader(tmp0, batch_size=args.batch_size, shuffle=True, num_workers=config.num_workers)
@@ -55,7 +55,7 @@ if args.model == 'cnn':
         print('\n' + '-' * 89)
         print('Exiting from training early')
 elif args.model == 'rnn':
-    rnnModel = lstm.RNN('GRU', 300, 64, 8, 2, True, 0.3)
+    rnnModel = lstm.RNN('LSTM', 300, 64, 8, 2, True, 0.3)
     train_data = DataLoader(tmp0, batch_size=args.batch_size, shuffle=True, num_workers=config.num_workers)
     test_data = DataLoader(tmp1, batch_size=args.batch_size, shuffle=True, num_workers=config.num_workers)
     try:
